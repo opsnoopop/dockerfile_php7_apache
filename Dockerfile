@@ -63,6 +63,9 @@ RUN docker-php-ext-install soap
 # Install mod_rewrite and mod_headers
 RUN a2enmod rewrite headers
 
+# Install sockets
+RUN docker-php-ext-install sockets
+
 # Remove after install
 RUN apt-get -y autoremove
 RUN apt-get clean
