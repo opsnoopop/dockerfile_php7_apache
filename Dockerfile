@@ -43,6 +43,7 @@ RUN pecl install imagick
 RUN docker-php-ext-enable imagick
 
 # Install mongodb pecl.php.net
+RUN apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev
 RUN pecl install mongodb
 RUN docker-php-ext-enable mongodb
 
