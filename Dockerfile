@@ -1,4 +1,4 @@
-FROM php:7.3.9-apache
+FROM php:7.4-apache
 
 ARG USE_C_PROTOBUF=true
 
