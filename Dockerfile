@@ -34,7 +34,10 @@ RUN if [ "$USE_C_PROTOBUF" = "false" ]; then echo 'Using PHP implementation of P
 
 # Install gd
 RUN apt-get update && apt-get install -y libgd-dev
-RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+# for php <= 7.3.9
+#RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+# for php >= 7.4
+RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
 RUN docker-php-ext-install gd
 
 # Install imagick pecl.php.net
