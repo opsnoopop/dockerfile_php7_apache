@@ -77,6 +77,10 @@ RUN apt-get install -y nodejs
 # Install yarn
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
+# Install redis
+RUN yes | pecl install -o -f redis
+RUN rm -rf /tmp/pear
+RUN docker-php-ext-enable redis
 
 # Remove after install
 RUN apt-get -y autoremove
