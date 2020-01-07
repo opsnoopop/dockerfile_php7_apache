@@ -78,7 +78,7 @@ RUN apt-get install -y nodejs
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
 # Install redis
-RUN yes | pecl install redis
+RUN pecl install redis
 RUN docker-php-ext-enable redis
 
 # Remove after install
