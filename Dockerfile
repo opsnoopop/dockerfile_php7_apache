@@ -81,6 +81,12 @@ RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 RUN pecl install redis
 RUN docker-php-ext-enable redis
 
+# Install xdebug
+RUN pecl install xdebug
+RUN docker-php-ext-enable xdebug
+RUN echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+RUN echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 # Remove after install
 RUN apt-get -y autoremove
 RUN apt-get clean
