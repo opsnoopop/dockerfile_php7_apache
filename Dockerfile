@@ -81,7 +81,7 @@ RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 RUN pecl install redis
 RUN docker-php-ext-enable redis
 
-# install intl for numberformatter 
+# Install intl for numberformatter 
 RUN apt-get install -y zlib1g-dev libicu-dev g++
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-install intl
