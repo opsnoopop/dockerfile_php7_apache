@@ -98,6 +98,15 @@ RUN pecl install xdebug \
 # An IDE key has to be set, but anything works, at least for PhpStorm and VS Code...
 ENV XDEBUG_CONFIG="xdebug.idekey=''"
 
+# Install memcached
+RUN apt-get update && apt-get install -y libpq-dev libmemcached-dev
+RUN curl -L -o /tmp/memcached.tar.gz "https://pecl.php.net/get/memcached-3.1.5.tgz"
+RUN mkdir -p /usr/src/php/ext/memcached
+RUN tar -C /usr/src/php/ext/memcached -zxvf /tmp/memcached.tar.gz --strip 1
+RUN docker-php-ext-configure memcached
+RUN docker-php-ext-install memcached
+RUN rm /tmp/memcached.tar.gz
+
 # Remove after install
 RUN apt-get -y autoremove
 RUN apt-get clean
