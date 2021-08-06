@@ -33,11 +33,11 @@ RUN echo 'extension=grpc.so' >> $PHP_INI_DIR/conf.d/grpc.ini
 RUN if [ "$USE_C_PROTOBUF" = "false" ]; then echo 'Using PHP implementation of Protobuf'; else echo 'Using C implementation of Protobuf'; pecl install protobuf; echo 'extension=protobuf.so' >> $PHP_INI_DIR/conf.d/protobuf.ini; fi
 
 # Install gd
-RUN apt-get update && apt-get install -y libgd-dev
+RUN apt-get update && apt-get install -y libgd-dev libwebp-dev pngquant
 # for php <= 7.3.9
-#RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/
+#RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-webp-dir=/usr/include/
 # for php >= 7.4
-RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/
+RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ --with-webp=/usr/include/
 RUN docker-php-ext-install gd
 
 # Install imagick pecl.php.net
