@@ -69,7 +69,7 @@ RUN a2enmod rewrite headers
 RUN docker-php-ext-install sockets
 
 # Install nodejs
-RUN curl -sL https://deb.nodesource.com/setup_20.x | bash
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
 RUN apt-get install -y nodejs
 
 # Install yarn
