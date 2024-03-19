@@ -1,4 +1,4 @@
-FROM php:7.4.12-apache
+FROM php:7.2-apache
 
 ARG USE_C_PROTOBUF=true
 
@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y vim
 RUN apt-get update && apt-get install -y libxml2
 
 # Install zip
-RUN apt-get update && apt-get install -y zlib1g-dev libzip-dev
+RUN apt-get update && apt-get install -y libzip-dev libzip4 zlib1g-dev
 RUN docker-php-ext-configure zip
 RUN docker-php-ext-install zip
 
@@ -33,11 +33,9 @@ RUN echo 'extension=grpc.so' >> $PHP_INI_DIR/conf.d/grpc.ini
 RUN if [ "$USE_C_PROTOBUF" = "false" ]; then echo 'Using PHP implementation of Protobuf'; else echo 'Using C implementation of Protobuf'; pecl install protobuf; echo 'extension=protobuf.so' >> $PHP_INI_DIR/conf.d/protobuf.ini; fi
 
 # Install gd
-RUN apt-get update && apt-get install -y libgd-dev libwebp-dev
-# for php <= 7.3.9
-#RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-webp-dir=/usr/include/
-# for php >= 7.4
-RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ --with-webp=/usr/include/
+RUN apt-get update && apt-get install -y libgd-dev
+RUN apt-get install -y libwebp-dev
+RUN docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-webp-dir=/usr/include/
 RUN docker-php-ext-install gd
 
 # Install imagick pecl.php.net
@@ -71,11 +69,16 @@ RUN a2enmod rewrite headers
 RUN docker-php-ext-install sockets
 
 # Install nodejs
-RUN curl -sL https://deb.nodesource.com/setup_13.x | bash
+RUN curl -sL https://deb.nodesource.com/setup_20.x | bash
 RUN apt-get install -y nodejs
 
 # Install yarn
 RUN curl -o- -L https://yarnpkg.com/install.sh | bash
+
+# Install memcached
+RUN apt-get update -y && apt-get install -y libz-dev libmemcached-dev memcached libmemcached-tools
+RUN pecl install memcached
+RUN docker-php-ext-enable memcached
 
 # Install redis
 RUN pecl install redis
@@ -86,26 +89,26 @@ RUN apt-get install -y zlib1g-dev libicu-dev g++
 RUN docker-php-ext-configure intl
 RUN docker-php-ext-install intl
 
-# Install xdebug
-RUN pecl install xdebug \
-    && docker-php-ext-enable xdebug \
-    && echo "xdebug.remote_enable=1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    # host.docker.internal does not work on Linux yet: https://github.com/docker/for-linux/issues/264
-    # Workaround:
-    # ip -4 route list match 0/0 | awk '{print $3 " host.docker.internal"}' >> /etc/hosts \
-    && echo "xdebug.remote_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+# Install diseval
+#RUN git clone https://github.com/mk-j/PHP_diseval_extension && \
+# cd PHP_diseval_extension/source && \
+# phpize && \
+# ./configure && \
+# make && \
+# make install && \
+# docker-php-ext-enable diseval
 
-# An IDE key has to be set, but anything works, at least for PhpStorm and VS Code...
-ENV XDEBUG_CONFIG="xdebug.idekey=''"
+# Install locales-all
+RUN apt-get update && apt-get install -y locales locales-all
+ENV LC_ALL en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US.UTF-8
 
-# Install memcached
-RUN apt-get update && apt-get install -y libpq-dev libmemcached-dev
-RUN curl -L -o /tmp/memcached.tar.gz "https://pecl.php.net/get/memcached-3.1.5.tgz"
-RUN mkdir -p /usr/src/php/ext/memcached
-RUN tar -C /usr/src/php/ext/memcached -zxvf /tmp/memcached.tar.gz --strip 1
-RUN docker-php-ext-configure memcached
-RUN docker-php-ext-install memcached
-RUN rm /tmp/memcached.tar.gz
+# Install exif
+RUN apt-get update && apt-get install -y exiftool
+RUN docker-php-ext-configure exif
+RUN docker-php-ext-install exif
+RUN docker-php-ext-enable exif
 
 # Install pngquant for compress png
 RUN apt-get update && apt-get install -y pngquant
