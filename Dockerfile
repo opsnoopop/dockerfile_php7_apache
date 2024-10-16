@@ -116,6 +116,9 @@ RUN apt-get update && apt-get install -y pngquant
 # Install webp for convert .webp e.g cwebp, gif2webp
 RUN apt-get update && apt-get install -y webp
 
+# Install opcache
+RUN docker-php-ext-install opcache
+
 # Remove after install
 RUN apt-get -y autoremove
 RUN apt-get clean
