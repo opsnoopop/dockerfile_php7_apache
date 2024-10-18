@@ -45,7 +45,7 @@ RUN docker-php-ext-enable imagick
 
 # Install mongodb pecl.php.net
 RUN apt-get update && apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev
-RUN pecl install mongodb
+RUN pecl install mongodb-1.16.2
 RUN docker-php-ext-enable mongodb
 
 # Install mysqli
